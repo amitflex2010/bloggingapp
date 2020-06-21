@@ -51,6 +51,8 @@ const {
     truncate,
     editIcon,
     select,
+    getLoggedInUser,
+    getLoggedInUserImage
   } = require('./helpers/hbs')
   
   // Handlebars
@@ -63,6 +65,8 @@ const {
         truncate,
         editIcon,
         select,
+        getLoggedInUser,
+        getLoggedInUserImage
       },
       defaultLayout: 'main',
       extname: '.hbs',

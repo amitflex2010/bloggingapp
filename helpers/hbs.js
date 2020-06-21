@@ -18,6 +18,7 @@ module.exports = {
     return input.replace(/<(?:.|\n)*?>/gm, '')
   },
   editIcon: function (storyUser, loggedUser, storyId, floating = true) {
+      console.log(loggedUser.firstName)
     if (storyUser._id.toString() == loggedUser._id.toString()) {
       if (floating) {
         return `<a href="/stories/edit/${storyId}" class="btn-floating halfway-fab blue"><i class="fas fa-edit fa-small"></i></a>`
@@ -40,4 +41,10 @@ module.exports = {
         ' selected="selected"$&'
       )
   },
+  getLoggedInUser: function(loggedUser) {
+      return loggedUser.displayName.toString()
+  },
+  getLoggedInUserImage: function(loggedUser) {
+    return loggedUser.image.toString()
+},
 }
