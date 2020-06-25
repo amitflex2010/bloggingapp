@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: storybook
+  namespace: default
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+        storybook: web
+  template:
+    metadata:
+      labels:
+        storybook: web
+    spec:
+      containers:
+      - name: storybook-site
+        image: psamittripathi/storybook_app
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: storybook-entrypoint
+  namespace: default
+spec:
+  type: NodePort
+  selector:
+    storybook: web
+  ports:
+  - port: 8080
+    targetPort: 8080
+    nodePort: 30001
