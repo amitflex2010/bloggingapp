@@ -24,3 +24,16 @@ p {
       float: right;
       margin-top: 16px;
   }
+
+  .post {
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+    grid-gap: 2rem;
+    align-items: center;
+    border: 1px solid #ccc
+  }
+ .post-date {
+  color: #aaa;
+  font-size: .8rem;
+  margin-bottom: .5rem;
+ }

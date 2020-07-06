@@ -121,7 +121,7 @@ router.delete('/:id', ensureAuth, async (req, res) => {
       return res.render('error/404')
     }
 
-    if (story.user != req.user.id) {
+    if (story.user != req.user.userId) {
       res.redirect('/stories')
     } else {
       await Story.remove({ _id: req.params.id })
@@ -151,6 +151,26 @@ router.get('/user/:userId', ensureAuth, async (req, res) => {
     console.error(err)
     res.render('error/500')
   }
+})
+
+router.post('/like/:id',  async (req, res) => {
+ 
+
+    try {
+      const stories = await Story.findById(req.params.id);
+      // Check if the post has already been liked
+      if (stories.likes.some((like) => (like.user.toString() === req.user.id))) {
+        return res.status(400).json({ msg: 'Post already liked' });
+      }
+      stories.likes.unshift({ user: req.user.id });
+  
+      await stories.save();
+      return res.json(stories.likes);
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send('Server Error');
+    }
+ 
 })
 
 module.exports = router
