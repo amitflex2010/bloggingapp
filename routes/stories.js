@@ -155,7 +155,6 @@ router.get('/user/:userId', ensureAuth, async (req, res) => {
 
 router.post('/like/:id',  async (req, res) => {
  
-
     try {
       const stories = await Story.findById(req.params.id);
       // Check if the post has already been liked
@@ -171,6 +170,27 @@ router.post('/like/:id',  async (req, res) => {
       res.status(500).send('Server Error');
     }
  
-})
+});
+
+router.post('/unlike/:id', async (req, res) => {
+  try {
+    const story = await Story.findById(req.params.id);
+    // Check if the post has not yet been liked
+    if (!story.likes.some((like) => like.user.toString() === req.user.id)) {
+      return res.status(400).json({ msg: 'Post has not yet been liked' });
+    }
+
+    // remove the like
+    story.likes = story.likes.filter(
+      ({ user }) => user.toString() !== req.user.id
+    );
+
+    await story.save();
+    return res.json(story.likes);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
 
 module.exports = router

@@ -1,7 +1,6 @@
 <script>
 
-    function textRet() {
-        var result;
+    function addLike() {
         var userId = location.href.substr(location.href.lastIndexOf('/')+1, location.href.length);
         $.post({
         url: '/stories/like/'+userId,
@@ -9,13 +8,37 @@
             userId: location.href.substr(location.href.lastIndexOf('/')+1, location.href.length)
         },
         success: function(data) {
-            document.getElementById('thumb').innerHTML = '  ' + data.length;
-           
+            $('#thumb').html('  ' + data.length);   
         },
         error: function(err) {
             console.log(err.status, err.statusText, err.error)
+            if(err.status === 400) {
+                $('.alertext').show()
+                $('.alertext').html(err.responseJSON.msg);
+                setTimeout(function(){ $('.alertext').hide(); }, 3000);
+            }
         }
-       // document.getElementById('thumb').innerHTML = result.length;
+    });
+ }
+
+ function removeLike() { 
+    var userId = location.href.substr(location.href.lastIndexOf('/')+1, location.href.length);
+    $.post({
+        url: '/stories/unlike/'+userId,
+        options: {
+            userId: location.href.substr(location.href.lastIndexOf('/')+1, location.href.length)
+        },
+        success: function(data) {
+            $('#thumb').html('  ' + data.length);
+        },
+        error: function(err) {
+            if(err.status === 400) {
+                $('.alertext').show()
+                $('.alertext').html(err.responseJSON.msg);
+                setTimeout(function(){ $('.alertext').hide(); }, 3000);
+            }
+            console.log(err.status, err.statusText, err.responseJSON.msg)
+        }
     });
  }
    
@@ -34,8 +57,9 @@
             </div>
             <div  class="col s12">
                 <div style="padding: 15px;">
-                    <button onclick="textRet()" class='btn blue'> <i class="fa fa-thumbs-up"><span id="thumb" style="font-size: 16px;">  {{story.likes.length}}</span></i></button>
-                    <button class='btn grey'> <i class="fa fa-thumbs-down"></i></button>
+                    <button onclick="addLike()" class='btn blue'> <i class="fa fa-thumbs-up"><span id="thumb" style="font-size: 16px;">  {{story.likes.length}}</span></i></button>
+                    <button onclick="removeLike()" class='btn grey'> <i class="fa fa-thumbs-down"></i></button>
+                    <span style="display: none; font-size:14px; color:red" class="alertext"></span>
                 </div>  
             </div>  
         </div>
