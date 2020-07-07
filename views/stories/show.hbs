@@ -41,6 +41,23 @@
         }
     });
  }
+
+ function addComments() {
+     var storyId = location.href.substr(location.href.lastIndexOf('/')+1, location.href.length);
+    $.post({
+        url: '/stories/comment/'+storyId,
+        data: {
+            text: $('.comment').val()
+        },
+        success: function(data) {
+           console.log(data);
+           location.reload();
+        },
+        error: function(err) {
+            console.log(err.status, err.statusText, err.responseJSON.msg)
+        }
+    });
+ }
    
    
 </script>
@@ -63,43 +80,54 @@
                 </div>  
             </div>  
         </div>
-       <!-- <div style="display: grid; width:100%">
+        <div style="display: grid; width:100%">
 
-        <form action="/posts" method="POST" class="col s12">
-        
-        <div class="input-field">
-            <input type="textarea"
-            name='text'
-            cols='30'
-            rows='5'
-            style="border: 1px solid #ccc;
-                    height: 6rem;
-                    width: 100%;
-                    padding: 0.4rem;
-                    margin-bottom: 9px;
-                    text-align: left;"
-            placeholder='Create a post'
-            required
-            />
-            <input type='submit' class='btn dark' value='Submit' />
-        </div> 
-        </form>  
+            
+            <div class="input-field">
+                <input type="textarea"
+                class="comment"
+                name='text'
+                cols='30'
+                rows='5'
+                style="border: 1px solid #ccc;
+                        height: 6rem;
+                        width: 100%;
+                        padding: 0.4rem;
+                        margin-bottom: 9px;
+                        text-align: left;"
+                placeholder='Write comments here'
+                required
+                />
+                <input type='button' onclick="addComments()" class='btn dark' value='Submit' />
+            </div> 
+           
 
-         <div class='post bg-white p-1 my-1'>
-                <div style="padding: 10px; text-align:center">   
-                    <img class='circle responsive-img img-small' src={{{getLoggedInUserImage user}}} alt='' />
-                    <span>{{{getLoggedInUser user}}}</span>
-                    </Link>
-                </div>
-                <div style="padding: 10px;">
-                     <p class='my-1'>This is comment</p>
-                    <p class='post-date'>
-                        Posted on <Moment format='YYYY/MM/DD'>2020/06/03</Moment>
-                    </p>
+            <div style="margin-left:30px">
+                <span>Comments: </span>
+                {{#each story.comments}}
+                    <div class='post bg-white' style="margin-top: 10px; margin-bottom: 10px;">
+                        
+                        <div style="padding: 10px; text-align:center; border-right: 1px dotted gray;">   
+                            <div>
+                            <img class='circle responsive-img img-small' src='{{avatar}}' alt='' />
+                            </div>
+                            <span>{{name}}</span>
+                            </Link>
+                        </div>
+                        <div style="padding: 10px;">
+                            <p class='my-1'>{{text}}</p>
+                            <p class='post-date'>
+                                Posted on {{formatDate createdAt 'MMMM Do YYYY, h:mm:ss a'}}
+                            </p>
+                            
+                        </div>
                     
-                </div>
-            </div>  
-        </div>    -->
+                    </div>  
+                {{else}}
+                    <p>No commets to display</p>
+                {{/each}}
+            </div>
+        </div>
     </div>
     <div class="col s12 m4" style="margin-top: 8%;">
         <div class="card center-align">

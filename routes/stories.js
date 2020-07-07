@@ -2,7 +2,8 @@ const express = require('express')
 const router = express.Router()
 const { ensureAuth } = require('../middleware/auth')
 
-const Story = require('../models/Story')
+const Story = require('../models/Story');
+const User = require('../models/User');
 
 // @desc    Show add page
 // @route   GET /stories/add
@@ -192,5 +193,33 @@ router.post('/unlike/:id', async (req, res) => {
     res.status(500).send('Server Error');
   }
 });
+router.post(
+  '/comment/:id',
+  async (req, res) => {
+    /*const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }*/
+    try {
+      const user = await User.findById(req.user.id);
+      const story = await Story.findById(req.params.id);
+      
+      const newComment = {
+        text: req.body.text,
+        name: user.firstName,
+        avatar: user.image,
+        user: req.user.id
+      };
+
+      story.comments.unshift(newComment);
+
+      await story.save();
+      res.json(story.comments);
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send('Server Error');
+    }
+  }
+);
 
 module.exports = router

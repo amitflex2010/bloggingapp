@@ -26,6 +26,27 @@ const StorySchema = new mongoose.Schema({
       }
     }
   ],
+  comments: [
+    {
+      user: {
+        type: mongoose.Schema.Types.ObjectId
+      },
+      text: {
+        type: String,
+        required: true
+      },
+      name: {
+        type: String
+      },
+      avatar: {
+        type: String
+      },
+      date: {
+        type: Date,
+        default: Date.now
+      }
+    }
+  ],
   createdAt: {
     type: Date,
     default: Date.now,
